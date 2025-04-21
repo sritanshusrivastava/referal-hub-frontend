@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Platform Setup - Customer Data Sync</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    body {
+      background-color: #f5f7fa;
+      display: flex;
+      min-height: 100vh;
+    }
+    
+    .sidebar {
+      width: 240px;
+      background-color: white;
+      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+      padding: 20px 0;
+      overflow-y: auto;
+    }
+    
+    .sidebar-header {
+      padding: 15px 20px;
+      font-weight: 600;
+      font-size: 18px;
+      color: #333;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      animation: fadeIn 0.8s ease;
+    }
+    
+    .sidebar-icon {
+      background-color: #e8eeff;
+      color: #4f7cff;
+      border-radius: 6px;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+    }
+    
+    .menu-item {
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      color: #555;
+      font-size: 14px;
+      transition: all 0.3s ease;
+    }
+    
+    .menu-item:hover {
+      background-color: #f0f4ff;
+      color: #4f7cff;
+    }
+    
+    .menu-item.active {
+      background-color: #f0f4ff;
+      color: #4f7cff;
+      font-weight: 500;
+      border-left: 3px solid #4f7cff;
+    }
+    
+    .menu-icon {
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .divider {
+      height: 1px;
+      background-color: #eee;
+      margin: 15px 0;
+    }
+    
+    .main-container {
+      flex: 1;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      animation: slideDown 0.5s ease;
+    }
+    
+    .page-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #333;
+    }
+    
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border: 1px solid #e0e0e0;
+      border-radius: 20px;
+      padding: 6px 12px;
+      background-color: #f9f9f9;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      transition: all 0.2s ease;
+    }
+    
+    .user-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background-color: black;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      color: white;
+    }
+    
+    .content-area {
+      flex: 1;
+      display: flex;
+      gap: 20px;
+      animation: fadeIn 0.8s ease;
+    }
+    
+    .get-started {
+      flex: 1;
+      background-color: white;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .get-started h2 {
+      font-size: 18px;
+      color: #333;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .get-started p {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+    
+    .step-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    
+    .step-item {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      padding: 12px 0;
+      transition: all 0.3s ease;
+    }
+    
+    .step-circle {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 2px solid #ddd;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      color: #888;
+      flex-shrink: 0;
+      background-color: white;
+    }
+    
+    .step-circle.completed {
+      background-color: #10b981;
+      border-color: #10b981;
+      color: white;
+    }
+    
+    .step-circle.active {
+      border-color: #4f7cff;
+      background-color: #4f7cff;
+      color: white;
+    }
+    
+    .step-content {
+      flex: 1;
+    }
+    
+    .step-title {
+      font-weight: 500;
+      color: #333;
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+    
+    .step-status {
+      font-size: 12px;
+      color: #888;
+    }
+    
+    .import-area {
+      flex: 1.5;
+      background-color: white;
+      border-radius: 8px;
+      padding: 25px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .import-header {
+      margin-bottom: 25px;
+    }
+    
+    .import-header h2 {
+      font-size: 18px;
+      color: #333;
+      margin-bottom: 10px;
+    }
+    
+    .connect-button {
+      background-color: white;
+      border: 1px solid #e0e0e0;
+      color: #4f7cff;
+      border-radius: 4px;
+      padding: 10px 15px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 15px;
+    }
+    
+    .connect-button:hover {
+      background-color: #f8faff;
+      border-color: #4f7cff;
+    }
+    
+    .divider-text {
+      text-align: center;
+      color: #888;
+      font-size: 14px;
+      margin: 15px 0;
+    }
+    
+    .upload-area {
+      border: 1px dashed #ccc;
+      border-radius: 6px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 20px;
+      transition: all 0.3s ease;
+    }
+    
+    .upload-area.success {
+      border-color: #10b981;
+      background-color: #f0fff4;
+    }
+    
+    .file-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #666;
+      font-size: 14px;
+    }
+    
+    .file-icon {
+      color: #4f7cff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .file-size {
+      color: #888;
+      font-size: 12px;
+    }
+    
+    .progress-bar {
+      width: 100%;
+      height: 6px;
+      background-color: #eee;
+      border-radius: 3px;
+      overflow: hidden;
+      margin-top: 5px;
+    }
+    
+    .progress-fill {
+      height: 100%;
+      background-color: #10b981;
+      width: 100%;
+      transition: width 1s ease;
+    }
+    
+    .re-upload-button {
+      background-color: white;
+      border: 1px solid #ff6b6b;
+      color: #ff6b6b;
+      border-radius: 4px;
+      padding: 5px 10px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .re-upload-button:hover {
+      background-color: #fff5f5;
+    }
+    
+    .next-button {
+      background-color: #4f7cff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 12px;
+      font-size: 15px;
+      font-weight: 500;
+      width: 100%;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: auto;
+    }
+    
+    .next-button:hover {
+      background-color: #3a68e0;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(79, 124, 255, 0.2);
+    }
+    
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+    
+    .checkmark-circle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background-color: #10b981;
+      color: white;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-icon">P</div>
+      Platform Setup
+    </div>
+    
+    <div class="menu-item active">
+      <div class="menu-icon">⚙️</div>
+      Platform Setup
+    </div>
+    
+    <div class="menu-item">
+      <div class="menu-icon">👤</div>
+      AI Agent
+    </div>
+    
+    <div class="menu-item">
+      <div class="menu-icon">📊</div>
+      Dashboard
+    </div>
+    
+    <div class="menu-item">
+      <div class="menu-icon">📢</div>
+      Campaign
+    </div>
+    
+    <div class="menu-item">
+      <div class="menu-icon">💬</div>
+      Promoters
+    </div>
+    
+    <div class="menu-item">
+      <div class="menu-icon">👥</div>
+      Leads
+    </div>
+    
+    <div class="menu-item">
+      <div class="menu-icon">📄</div>
+      Payouts
+    </div>
+    
+    <div class="divider"></div>
+    
+    <div class="menu-item">
+      <div class="menu-icon">⚙️</div>
+      Settings
+    </div>
+    
+    <div class="menu-item">
+      <div class="menu-icon">❓</div>
+      Help
+    </div>
+  </div>
+  
+  <div class="main-container">
+    <div class="header">
+      <div class="page-title">Platform Setup</div>
+      <div class="user-profile">
+        <div class="user-avatar">KS</div>
+        <span style="color: #777; font-size: 12px;">example@email.com</span>
+      </div>
+    </div>
+    
+    <div class="content-area">
+      <div class="get-started">
+        <h2>
+          Get Started with ReferralHub
+        </h2>
+        <p>To get started with better referrals & rewards, complete your account setup in a few easy steps:</p>
+        
+        <div class="step-list">
+          <div class="step-item">
+            <div class="checkmark-circle">✓</div>
+            <div class="step-content">
+              <div class="step-title">Set Up Business Profile</div>
+              <div class="step-status">Completed</div>
+            </div>
+          </div>
+          
+          <div class="step-item">
+            <div class="checkmark-circle">✓</div>
+            <div class="step-content">
+              <div class="step-title">Sync Your Customer Data</div>
+              <div class="step-status">Completed</div>
+            </div>
+          </div>
+          
+          <div class="step-item">
+            <div class="step-circle">3</div>
+            <div class="step-content">
+              <div class="step-title">Set Up AI Agent Rules</div>
+              <div class="step-status">Not Started</div>
+            </div>
+          </div>
+          
+          <div class="step-item">
+            <div class="step-circle">4</div>
+            <div class="step-content">
+              <div class="step-title">Set Up First Campaign</div>
+              <div class="step-status">Not Started</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="import-area">
+        <div class="import-header">
+          <h2>Import Customer Data: Sync with Zapier or Upload CSV</h2>
+        </div>
+        
+        <button class="connect-button">Connect with Zapier</button>
+        
+        <div class="divider-text">or</div>
+        
+        <div class="upload-area success">
+          <div class="file-info">
+            <div class="file-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <path d="M10 12a1 1 0 0 0 0 2h4a1 1 0 0 0 0-2h-4z"></path>
+              </svg>
+            </div>
+            <div>
+              <span>Leads.csv</span>
+              <div class="file-size">6.78KB</div>
+            </div>
+            <button class="re-upload-button">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 5px;">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="17 8 12 3 7 8"></polyline>
+                <line x1="12" y1="3" x2="12" y2="15"></line>
+              </svg>
+              Re-upload
+            </button>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill"></div>
+          </div>
+          <div style="color: #10b981; font-size: 12px; font-weight: 500; align-self: flex-start; margin-top: 5px; display: flex; align-items: center;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 5px;">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+              <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+            CSV File Uploaded Successfully!
+          </div>
+        </div>
+        
+        <button class="next-button">Next</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Animation for step items
+      const stepItems = document.querySelectorAll('.step-item');
+      stepItems.forEach((item, index) => {
+        setTimeout(() => {
+          item.style.opacity = '1';
+        }, 100 * (index + 1));
+        
+        item.addEventListener('mouseenter', function() {
+          if (!this.querySelector('.step-circle.completed') && !this.querySelector('.checkmark-circle')) {
+            const stepCircle = this.querySelector('.step-circle');
+            stepCircle.style.borderColor = '#4f7cff';
+            stepCircle.style.color = '#4f7cff';
+            stepCircle.style.transform = 'scale(1.1)';
+          }
+        });
+        
+        item.addEventListener('mouseleave', function() {
+          if (!this.querySelector('.step-circle.completed') && !this.querySelector('.checkmark-circle')) {
+            const stepCircle = this.querySelector('.step-circle');
+            stepCircle.style.borderColor = '#ddd';
+            stepCircle.style.color = '#888';
+            stepCircle.style.transform = 'scale(1)';
+          }
+        });
+      });
+      
+      // Re-upload button functionality
+      const reUploadButton = document.querySelector('.re-upload-button');
+      reUploadButton.addEventListener('click', function() {
+        const uploadArea = document.querySelector('.upload-area');
+        uploadArea.classList.remove('success');
+        
+        const progressFill = document.querySelector('.progress-fill');
+        progressFill.style.width = '0';
+        
+        const statusText = document.querySelector('.upload-area div:last-child');
+        statusText.innerHTML = `
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 5px;">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+          Uploading...
+        `;
+        statusText.style.color = '#888';
+        
+        // Simulate upload progress
+        setTimeout(() => {
+          progressFill.style.width = '30%';
+        }, 300);
+        
+        setTimeout(() => {
+          progressFill.style.width = '70%';
+        }, 600);
+        
+        setTimeout(() => {
+          progressFill.style.width = '100%';
+          uploadArea.classList.add('success');
+          
+          statusText.innerHTML = `
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 5px;">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+              <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+            CSV File Uploaded Successfully!
+          `;
+          statusText.style.color = '#10b981';
+        }, 1200);
+      });
+      
+      // Connect button effect
+      const connectButton = document.querySelector('.connect-button');
+      connectButton.addEventListener('click', function() {
+        this.innerHTML = 'Connecting...';
+        this.style.backgroundColor = '#f0f4ff';
+        
+        setTimeout(() => {
+          this.innerHTML = 'Connect with Zapier';
+          this.style.backgroundColor = 'white';
+        }, 1500);
+      });
+      
+      // Next button animation
+      const nextButton = document.querySelector('.next-button');
+      nextButton.addEventListener('click', function() {
+        this.innerHTML = 'Processing...';
+        this.style.background = '#3a68e0';
+        
+        setTimeout(() => {
+          this.innerHTML = 'Proceed to AI Rules Setup';
+          this.style.background = '#4CAF50';
+          
+          // Update the third step to active
+          const thirdStepCircle = document.querySelector('.step-item:nth-child(3) .step-circle');
+          thirdStepCircle.classList.add('active');
+          thirdStepCircle.parentElement.querySelector('.step-status').textContent = 'In Progress';
+        }, 1500);
+      });
+    });
+  </script>
+</body>
+</html>
